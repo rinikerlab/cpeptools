@@ -1,11 +1,11 @@
-from rdkit import Chem, DistanceGeometry
-from rdkit.Chem import AllChem
 from ..mol_ops import *
 from ..geometry import get_points_on_ellipse, calculate_ellipse_radii
 from .bmat import modify_bound_matrix
+import copy
 from scipy.spatial.distance import cdist
 import numpy as np
-import copy
+from rdkit import Chem, DistanceGeometry
+from rdkit.Chem import AllChem
 
 def generate_conformers_with_eccentricity(mol, num_conf, angle, new_mol = True):
     print("Generating {} Conformers for {} at angle {}".format(num_conf, Chem.MolToSmiles(mol), angle))
