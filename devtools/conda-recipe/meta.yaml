@@ -15,6 +15,10 @@ requirements:
 
   run:
     - python
+    - numpy
+    - scipy
+    - rdkit
+    - mdtraj
 
 test:
   requires:
