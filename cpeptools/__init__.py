@@ -9,6 +9,7 @@ from __future__ import absolute_import
 
 # Add imports here
 from .cpeptools import *
+from .confgen.confgen import *
 
 # Handle versioneer
 from ._version import get_versions
