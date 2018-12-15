@@ -39,14 +39,14 @@ install:
     # Install pip only modules
   - pip install codecov
 
+    # Build and install package
+  - conda build --python=$PYTHON_VER devtools/conda-recipe
     # Required packages
   - conda install --quiet --yes -c anaconda scipy numpy
   - conda install --quiet --yes -c rdkit rdkit
   - conda install --quiet --yes -c omnia mdtraj
 
 
-    # Build and install package
-  - conda build --python=$PYTHON_VER devtools/conda-recipe
   - conda install --use-local cpeptools
 
 
