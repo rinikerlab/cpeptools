@@ -18,7 +18,7 @@ setup(
     license='MIT',
 
     # Which Python importable modules should be included when your package is installed
-    packages=['cpeptools', "cpeptools.tests"],
+    packages=['cpeptools', "cpeptools.tests", "cpeptools.confgen", "cpeptools.metrics", "cpeptools.molgen"],
 
     # Optional include package data to ship with your package
     # Comment out this line to prevent the files from being packaged with your software
