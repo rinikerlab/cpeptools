@@ -40,7 +40,7 @@ install:
   - pip install codecov
 
     # Required packages
-  - conda install --quiet --yes -c anaconda scipy, numpy
+  - conda install --quiet --yes -c anaconda scipy numpy
   - conda install --quiet --yes -c rdkit rdkit
   - conda install --quiet --yes -c omnia mdtraj
 
