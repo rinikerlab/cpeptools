@@ -1,3 +1,6 @@
+# what is the difference between putting in `install` and `script`? the others have the install things in `script` https://github.com/openforcefield/openforcefield/blob/9949079abc64219312067ace42bcb54cef238e21/.travis.yml
+
+
 language: python
 
 # Run jobs on container-based infrastructure, can be overridden per job
@@ -41,7 +44,7 @@ install:
   - pip install codecov
 
     # Required packages
-  - conda install --quiet --yes -c anaconda scipy numpy scikit-learn 
+  - conda install --quiet --yes -c anaconda scipy numpy scikit-learn
   - conda install --quiet --yes -c rdkit rdkit
   - conda install --quiet --yes -c omnia mdtraj
 
