@@ -15,7 +15,7 @@ requirements:
   build:
     - python
     - setuptools
-    - sklearn
+    - scikit-learn
 
   run:
     - python
@@ -23,7 +23,7 @@ requirements:
     - scipy
     - rdkit
     - mdtraj
-    - sklearn
+    - scikit-learn
 
 test:
   requires:
