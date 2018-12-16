@@ -15,10 +15,6 @@ requirements:
   build:
     - python
     - setuptools
-    - numpy
-    - scipy
-    - rdkit
-    - mdtraj
 
   run:
     - python
@@ -26,6 +22,7 @@ requirements:
     - scipy
     - rdkit
     - mdtraj
+    - sklearn
 
 test:
   requires:
