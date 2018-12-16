@@ -7,6 +7,33 @@ from sklearn.decomposition import PCA
 from scipy.spatial import ConvexHull
 
 """
+#TODO:
+    - see to remove sklearn dependency (code below have right eigenvals not right eigenvectors)
+import numpy as np
+from sklearn import decomposition
+from sklearn import datasets
+iris = datasets.load_iris()
+X = iris.data
+X = X[:, :-1]
+X.shape
+pca = decomposition.PCA(n_components=3)
+pca.fit(X)
+pca.transform(X)
+pca.explained_variance_
+
+
+x_std = X
+
+cov = np.cov(x_std.T)
+ev , eig = np.linalg.eig(cov)
+a = eig.dot(x_std.T)
+ev
+a.T
+
+https://stats.stackexchange.com/questions/235882/pca-in-numpy-and-sklearn-produces-different-results
+--------------------
+
+
 Only deals with 2D/3D points, no molecule
 
 
@@ -52,8 +79,9 @@ def get_pca(coords):
 
     """
     pca = PCA(n_components=3)
-    pca.fit(coords)
-    new_coords = pca.transform(coords)
+    # pca.fit(coords)
+    # new_coords = pca.transform(coords)
+    new_coords = pca.fit_transform(coords)
 
     return  new_coords, pca.explained_variance_ratio_
 
