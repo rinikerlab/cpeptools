@@ -15,6 +15,10 @@ requirements:
   build:
     - python
     - setuptools
+    - numpy
+    - scipy
+    - rdkit
+    - mdtraj
 
   run:
     - python
