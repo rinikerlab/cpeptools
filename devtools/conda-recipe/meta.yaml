@@ -15,7 +15,6 @@ requirements:
   build:
     - python
     - setuptools
-    - scikit-learn
 
   run:
     - python

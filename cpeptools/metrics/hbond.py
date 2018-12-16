@@ -19,11 +19,10 @@ def calculate_hbond_occurences(traj):
 #### plotting
 
 
-import pickle
-import matplotlib.pyplot as plt
-import numpy as np
 
 def plot_heatmap_helper(mat, lab_x, lab_y, title = "", save_to = None):
+    import matplotlib.pyplot as plt
+    import numpy as np
     fig, ax = plt.subplots(1,1,figsize=(19,15))
     # ax = ax_arr[0]
 
