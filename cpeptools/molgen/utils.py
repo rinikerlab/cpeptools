@@ -135,41 +135,6 @@ def create_atom(number, name, aromatic = False):
     atm.GetPDBResidueInfo().SetTempFactor(0)
     return atm
 
-# #FIXME
-# def add_bond(atm1, atm2, bondtype = 1, same_mol = False): #TODO both idx needs to be in the same molecule
-#     """
-#     - !!!! should only be used after all the atom names are sorted/solved
-#     - atm1 atm2 order matters
-#     - usually user case of additional inter-residue linkage, e.g. disulphide bridges
-#
-#     - GetOwningMol() creates a new copy of molecule, this is desired
-#     """
-#
-#     if same_mol:
-#         mol1 = atm1.GetOwningMol()
-#         mol2 = atm2.GetOwningMol()
-#         if Chem.MolToSmiles(atm1.GetOwningMol()) != Chem.MolToSmiles(atm2.GetOwningMol()):
-#             raise AssertionError("atm1 and atm2 cannot come from the same molecule as they have non-equivelent SMILES code")
-#
-#         mol = atm1.GetOwningMol()
-#         idx1, idx2 = atm1.GetIdx(), atm2.GetIdx()
-#     else:
-#         mol1 = atm1.GetOwningMol()
-#         mol2 = atm2.GetOwningMol()
-#         # resnum ordering
-#         max_resnum = max([atm.GetPDBResidueInfo().GetResidueNumber() for atm in mol1.GetAtoms()])
-#         for atm in mol2.GetAtoms():
-#             atm.GetPDBResidueInfo().SetResidueNumber(max_resnum + atm.GetPDBResidueInfo().GetResidueNumber())
-#
-#         mol = Chem.CombineMols(mol1, mol2)
-#         idx1, idx2 = atm1.GetIdx(), atm2.GetIdx() + mol1.GetNumAtoms()
-#
-#     bondtype = _bondtypes[bondtype]
-#     mol = Chem.RWMol(mol)
-#     mol.AddBond(idx1, idx2, bondtype)
-#     mol.UpdatePropertyCache()
-#     Chem.GetSSSR(mol)
-#     return mol.GetMol()
 
 @wrap_mol_derivative
 def add_bond(mol, selection, atom, bondtype = 1, same_mol = False): #TODO both idx needs to be in the same molecule
