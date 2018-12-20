@@ -1,5 +1,4 @@
 from rdkit import Chem
-# from rdkit.Chem import AllChem
 
 def get_carbonyl_O(mol):
     return [i[0] for i in get_atom_mapping(mol, "[C]=[O:1]")]
@@ -35,3 +34,69 @@ def get_largest_ring(mol):
         if len(r) > len(out):
             out = r
     return list(out)
+
+
+def mol_with_atom_index( mol ):
+    atoms = mol.GetNumAtoms()
+    for idx in range( atoms ):
+        mol.GetAtomWithIdx( idx ).SetProp( 'molAtomMapNumber', str( mol.GetAtomWithIdx( idx ).GetIdx() ) )
+    return mol
+
+
+def draw_mol_with_property( mol, property ):
+    """
+    http://rdkit.blogspot.com/2015/02/new-drawing-code.html
+
+    Parameters
+    ---------
+    property : dict
+        key atom idx, val the property (need to be stringfiable)
+    """
+    import copy
+    from rdkit.Chem import Draw
+    from rdkit.Chem import AllChem
+
+    def run_from_ipython():
+        try:
+            __IPYTHON__
+            return True
+        except NameError:
+            return False
+
+
+    AllChem.Compute2DCoords(mol)
+    mol = copy.deepcopy(mol) #FIXME do I really need deepcopy?
+
+    for idx in property:
+        # opts.atomLabels[idx] =
+        mol.GetAtomWithIdx( idx ).SetProp( 'molAtomMapNumber', "({})".format( str(property[idx])))
+
+    mol = Draw.PrepareMolForDrawing(mol, kekulize=False) #enable adding stereochem
+
+    if run_from_ipython():
+        from IPython.display import SVG, display
+        drawer = Draw.MolDraw2DSVG(500,250)
+        drawer.DrawMolecule(mol)
+        drawer.FinishDrawing()
+        display(SVG(drawer.GetDrawingText().replace("svg:", "")))
+    else:
+        drawer = Draw.MolDraw2DCairo(500,250) #cairo requires anaconda rdkit
+        # opts = drawer.drawOptions()
+        drawer.DrawMolecule(mol)
+        drawer.FinishDrawing()
+        #
+        # with open("/home/shuwang/sandbox/tmp.png","wb") as f:
+        #     f.write(drawer.GetDrawingText())
+
+        import io
+        import matplotlib.pyplot as plt
+        import matplotlib.image as mpimg
+
+        buff = io.BytesIO()
+        buff.write(drawer.GetDrawingText())
+        buff.seek(0)
+        plt.figure()
+        i = mpimg.imread(buff)
+        plt.imshow(i)
+        plt.show()
+        # display(SVG(drawer.GetDrawingText()))
