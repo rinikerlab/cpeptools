@@ -788,3 +788,14 @@ def bmat_from_conformer(conf):
     num_atoms = len(positions)
     bmat = cdist(positions, positions)
     return bmat
+
+
+def get_ring_bond_length_list(bmat, ring_indices, scale_factor = 1.0):
+    indices = ring_indices + [ring_indices[0]]
+    out = []
+    for i in range(len(indices) - 1):
+        col_idx = min(indices[i], indices[i+1])
+        row_idx = max(indices[i], indices[i+1])
+        out.append(bmat[row_idx, col_idx] * scale_factor) #min dis
+        #out.append(bmat[col_idx, row_idx] * sacle_factor) #max dis
+    return out
