@@ -9,7 +9,10 @@ from __future__ import absolute_import
 
 # Add imports here
 from .cpeptools import *
-from .confgen.confgen import *
+# from .confgen.confgen import *
+from .confgen.utils import bound_matrix_from_ellipse, get_amide_pairwise_coulomb_interaction
+from .mol_ops import *
+# from .confgen.postprocessing import *
 # from .molgen.peptide import *
 # from .molgen.fragment import *
 

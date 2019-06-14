@@ -7,6 +7,14 @@ cPepTools
 
 Various tools to aid the simulational study of cyclic (mainly) peptidic species.
 
+
+### Functionalities
+#### Confgen
+#### Molgen
+#### Metrics
+- uses mdtraj objects as input
+
+
 ### Copyright
 
 Copyright (c) 2018, shuzhe Wang
