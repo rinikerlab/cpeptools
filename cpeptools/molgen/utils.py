@@ -1,6 +1,14 @@
 import copy
 from rdkit import Chem
 
+"""
+TODOs:
+    !!- show molecule of Hydrogen does not show atom name (only element symbol)
+    - enhance selection string scope (chain ID, etc)
+    - remove out of date functions
+    - merging with mol_ops?
+    -
+"""
 _aa321 = {'CYS': 'C', 'ASP': 'D', 'SER': 'S', 'GLN': 'Q', 'LYS': 'K',
      'ILE': 'I', 'PRO': 'P', 'THR': 'T', 'PHE': 'F', 'ASN': 'N',
      'GLY': 'G', 'HIS': 'H', 'LEU': 'L', 'ARG': 'R', 'TRP': 'W',

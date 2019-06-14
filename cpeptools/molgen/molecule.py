@@ -6,13 +6,15 @@ from .utils import *
 #from Bio.SeqUtils import seq1, seq3
 """
     TODOs:
-        - scheme for residueName column names that reflects chemical modifications done to the residues (e.g. methylated/D-amino acid)
-        - change 3code to 1code
-        - should I keep the internal self.peptide always as RWMol()? and when user wants to then call self.peptide.GetMol()
+        - custom function that deals with AddHs() in case of conformer generation
         - support for charged residues
         - PDB block temperature factor is -nan for residues bigger than 1
         - !sort atom by residue number (done)
         - make methylate(i.e. add new terminal atoms) more general (done)
+        - remove functional dependcies from utils that are out of date
+
+        - ! return all bond/nonbond parameters to be filled in for simulation
+        - ! a higher level class that takes both peptides and fragments and a bunch of mol operations to form the final product (maybe MolExtend suffices)
 """
 class MolExtend(Chem.Mol):
     """ not directly used
@@ -42,6 +44,7 @@ class MolExtend(Chem.Mol):
         return Chem.MolToSmiles(self, isomericSmiles = True, allBondsExplicit = True, allHsExplicit = True)
 
 
+    # should deprecate as now you can just use rdkit generate conformer method
     def gen_conf(self, n = 1): #FIXME
         """Generate user specified number of conformers using ETKDG
         """
@@ -103,7 +106,7 @@ class Peptide(MolExtend):
         protonation_states : dict (optional)
             indicates which residues has non-standard(standard states has number 0) protonation states, e.g. {1:1} means res 1 has the first protonation state (which is usually the sole charged states
             Only used for registering the residue name column
-            Histidine requres special assignment of which state is which
+            Histidine requires special assignment of which state is which
         """
 
         methylation_sites = set(methylation_sites)
