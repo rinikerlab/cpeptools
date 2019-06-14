@@ -1,7 +1,10 @@
 #FIXME
 import mdtraj as md
 import numpy as np
-
+import tempfile
+from rdkit import Chem
+from rdkit.Chem import AllChem
+from ..mol_ops import get_largest_ring
 # def get_frames( which_clusters, rmsd_threshold = 0.1):
 #     output = []
 #     num_traj = len(traj_list)
@@ -14,6 +17,24 @@ import numpy as np
 #             # print("here", [len(k) for k in output])
 #             traj = reduce(lambda a,b : a+b, output)
 #             return traj.superpose(traj, 0 , atom_indices = traj.topology.select("name CA or name C or name N or name O"))
+
+
+def _get_largest_ring_indices(traj, smiles = None):
+    tmp_dir = tempfile.mkdtemp()
+    pdb_filename = tempfile.mktemp(suffix=".pdb", dir=tmp_dir)
+    traj[0].save(pdb_filename)
+
+    if smiles is not None:
+        mol = Chem.MolFromPDBFile(pdb_filename, removeHs = True)
+        ref = Chem.MolFromSmiles(smiles, sanitize = True)
+        mol = AllChem.AssignBondOrdersFromTemplate(ref, mol)
+    else:
+        mol = Chem.MolFromPDBFile(pdb_filename, removeHs = False)
+
+    # try: #some structures might be non-sensical and gets NaN
+    indices = get_largest_ring(mol)
+    
+    return indices
 
 def remove_similar_frames(traj, rmsd_threshold = 0.1):
     counter = 0

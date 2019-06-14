@@ -1,4 +1,5 @@
 import mdtraj as md
+import numpy as np
 from collections import defaultdict
 
 def calculate_hbond_occurences(traj):
@@ -61,7 +62,7 @@ def plot_heatmap_helper(mat, lab_x, lab_y, title = "", save_to = None):
         plt.show()
 
 
-def plot_heatmap(lookup, save_to = None): #calculate_hbond_occurences
+def plot_heatmap(lookup, save_to = None, **kwargs): #calculate_hbond_occurences
     import copy
     donor_labels = copy.deepcopy(lookup["labels"])
     acceptor_labels = copy.deepcopy(lookup["labels"])
@@ -95,5 +96,5 @@ def plot_heatmap(lookup, save_to = None): #calculate_hbond_occurences
     for idx,val in enumerate(acceptor_labels):
         if val.split("-")[-1] == "OG1":
             acceptor_labels[idx] = val.split("-")[0] + "-OH"
-
-    plot_heatmap_helper(mat, donor_labels, acceptor_labels, save_to)
+    1
+    plot_heatmap_helper(mat, donor_labels, acceptor_labels, kwargs["title"], save_to)
