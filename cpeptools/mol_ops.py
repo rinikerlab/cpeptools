@@ -24,6 +24,16 @@ def get_atom_mapping(mol, smirks):
     return matches
 
 
+def _decide_indices_order(indices):
+    """
+    arrange indices such the first entry in list has smallest index, the second has the second smallest index
+    """
+    second_entry, last_entry = indices[1], indices[-1]
+    if second_entry > last_entry : #reverse list
+        indices = indices[1:] + [indices[0]]
+        indices.reverse()
+    return indices
+
 def get_rings(mol):
     for ring in mol.GetRingInfo().AtomRings():
         yield ring
@@ -33,7 +43,8 @@ def get_largest_ring(mol):
     for r in get_rings(mol):
         if len(r) > len(out):
             out = r
-    return list(out)
+    out = list(out)
+    return _decide_indices_order(out)
 
 
 def mol_with_atom_index( mol ):
