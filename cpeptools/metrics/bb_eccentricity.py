@@ -147,14 +147,14 @@ def show_ellipse_fitting(md_traj, smiles = None, show_ch = True, save_path = Non
         Eccen (roundness): {:.2f}
         Eccen_CH : {:.2f}
         Norm_3rd_PC (flatness): {:.2f}
-        Angle : {:.0f}{}
+        Angle : {:.1f}{}
         """.format(get_eccentricity(e_obj), get_eccentricity(ch_e_obj),  3 * variance_ratio[-1], angle*180/3.1415926, u'\N{DEGREE SIGN}')
     else:
         # Dev_from_3D : {:.2f}
         string = """
         Eccen (roundness) : {:.2f}
         Norm_3rd_PC (flatness): {:.2f}
-        Angle : {:.0f}{}
+        Angle : {:.1f}{}
         """.format(get_eccentricity(e_obj),  3 * variance_ratio[-1], angle*180/3.1415926, u'\N{DEGREE SIGN}')
     plt.text(-.01,.0, string,
     verticalalignment='bottom',
