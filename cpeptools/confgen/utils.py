@@ -29,6 +29,7 @@ def bound_matrix_from_ellipse(mol, angle, update_scheme = modify_bound_matrix, e
 
 
 def get_amide_pairwise_coulomb_interaction(mol, counter_charge = True, scale_factor = 0.5):
+    from itertools import product
     NH = get_amine_H(mol)
     CO = get_carbonyl_O(mol)
     to_exclude = {*get_1_4_pairs(mol) , *get_1_5_pairs(mol)}
