@@ -46,6 +46,27 @@ def get_largest_ring(mol):
     out = list(out)
     return _decide_indices_order(out)
 
+# def get_largest_ring_with_alpha_atoms(mol):
+#     ring = get_largest_ring(mol)
+#     out = []
+#     for r in ring:
+#         out += [a.GetIdx() for a in mol.GetAtomWithIdx(r).GetNeighbors()]
+#     out = ring + out
+#     #set does not necessarily preserve order
+#     return list(set(out))
+#
+
+def get_neighbor_indices(mol, indices):
+    out = []
+    for i in indices:
+        out += [a.GetIdx() for a in mol.GetAtomWithIdx(i).GetNeighbors()]
+    out = indices + out
+    #set does not necessarily preserve order
+    return list(set(out))
+
+def get_neighbour_indices(mol, indices):
+    return get_neighbor_indices(mol, indices)
+
 
 def mol_with_atom_index( mol ):
     atoms = mol.GetNumAtoms()
@@ -54,7 +75,7 @@ def mol_with_atom_index( mol ):
     return mol
 
 
-def draw_mol_with_property( mol, property ):
+def draw_mol_with_property( mol, property, **kwargs):
     """
     http://rdkit.blogspot.com/2015/02/new-drawing-code.html
 
@@ -86,12 +107,18 @@ def draw_mol_with_property( mol, property ):
 
     if run_from_ipython():
         from IPython.display import SVG, display
-        drawer = Draw.MolDraw2DSVG(500,250)
+        if "width" in kwargs and type(kwargs["width"]) is int and "height" in kwargs and type(kwargs["height"]) is int:
+            drawer = Draw.MolDraw2DSVG(kwargs["width"], kwargs["height"])
+        else:
+            drawer = Draw.MolDraw2DSVG(500,250)
         drawer.DrawMolecule(mol)
         drawer.FinishDrawing()
         display(SVG(drawer.GetDrawingText().replace("svg:", "")))
     else:
-        drawer = Draw.MolDraw2DCairo(500,250) #cairo requires anaconda rdkit
+        if "width" in kwargs and type(kwargs["width"]) is int and "height" in kwargs and type(kwargs["height"]) is int:
+            drawer = Draw.MolDraw2DCairo(kwargs["width"], kwargs["height"])
+        else:
+            drawer = Draw.MolDraw2DCairo(500,250) #cairo requires anaconda rdkit
         # opts = drawer.drawOptions()
         drawer.DrawMolecule(mol)
         drawer.FinishDrawing()
