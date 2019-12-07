@@ -1,4 +1,15 @@
 from rdkit import Chem
+import numpy as np
+from functools import reduce
+
+"""
+rdkit mol manipulations
+"""
+#TODO maybe better to place somewhere else?
+def mol_from_multiple_pdb_files(file_list, removeHs = False):
+    pdb_string = reduce(lambda a, b : a + b, [open(i, "r").read()[:-4] for i in file_list]) + "END\n"
+    return Chem.MolFromPDBBlock(pdb_string, removeHs = removeHs)
+
 
 def get_carbonyl_O(mol):
     return [i[0] for i in get_atom_mapping(mol, "[C]=[O:1]")]
@@ -28,6 +39,8 @@ def _decide_indices_order(indices):
     """
     arrange indices such the first entry in list has smallest index, the second has the second smallest index
     """
+
+    indices = list(np.roll(indices, -np.argwhere(indices == np.min(indices))[0][0]))
     second_entry, last_entry = indices[1], indices[-1]
     if second_entry > last_entry : #reverse list
         indices = indices[1:] + [indices[0]]
@@ -45,16 +58,6 @@ def get_largest_ring(mol):
             out = r
     out = list(out)
     return _decide_indices_order(out)
-
-# def get_largest_ring_with_alpha_atoms(mol):
-#     ring = get_largest_ring(mol)
-#     out = []
-#     for r in ring:
-#         out += [a.GetIdx() for a in mol.GetAtomWithIdx(r).GetNeighbors()]
-#     out = ring + out
-#     #set does not necessarily preserve order
-#     return list(set(out))
-#
 
 def get_neighbor_indices(mol, indices):
     out = []
