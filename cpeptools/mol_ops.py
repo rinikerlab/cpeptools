@@ -7,6 +7,9 @@ rdkit mol manipulations
 """
 #TODO maybe better to place somewhere else?
 def mol_from_multiple_pdb_files(file_list, removeHs = False):
+    """
+    assumes all pdb belong to the same molecule entity
+    """
     pdb_string = reduce(lambda a, b : a + b, [open(i, "r").read()[:-4] for i in file_list]) + "END\n"
     return Chem.MolFromPDBBlock(pdb_string, removeHs = removeHs)
 
@@ -45,7 +48,7 @@ def _decide_indices_order(indices):
     if second_entry > last_entry : #reverse list
         indices = indices[1:] + [indices[0]]
         indices.reverse()
-    return indices
+    return [int(i) for i in indices]
 
 def get_rings(mol):
     for ring in mol.GetRingInfo().AtomRings():
