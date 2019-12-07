@@ -30,7 +30,6 @@ def minimise_energy_all_confs(mol, models = None, epsilon = 4, allow_undefined_s
     molecule = Molecule.from_rdkit(tmp, allow_undefined_stereo = allow_undefined_stereo)
     molecule.partial_charges = unit.Quantity(np.array(charges), unit.elementary_charge)
     topology = Topology.from_molecules(molecule)
-    print("here")
     openmm_system = forcefield.create_openmm_system(topology, charge_from_molecules= [molecule])
 
     structure = parmed.openmm.topsystem.load_topology(topology.to_openmm(), openmm_system)
