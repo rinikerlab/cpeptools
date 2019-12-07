@@ -48,7 +48,7 @@ def minimise_energy_all_confs(mol, models = None, epsilon = 4, allow_undefined_s
         simulation.context.setPositions(structure.positions)
 
         simulation.minimizeEnergy()
-        simulation.step(1)
+        # simulation.step(1)
 
         coords = simulation.context.getState(getPositions = True).getPositions(asNumpy = True).value_in_unit(unit.angstrom)
         conf = out_mol.GetConformer(i)
