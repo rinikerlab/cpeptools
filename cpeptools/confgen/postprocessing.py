@@ -1,8 +1,8 @@
-from simtk.unit import *
-from simtk.openmm.app import *
-from simtk.openmm import *
 
 def minimise_energy_all_confs(mol, models = None, epsilon = 4, allow_undefined_stereo = True, **kwargs ):
+    from simtk.unit import *
+    from simtk.openmm.app import *
+    from simtk.openmm import *
     from rdkit import Chem
     from rdkit.Geometry import Point3D
     import mlddec
@@ -59,6 +59,7 @@ def minimise_energy_all_confs(mol, models = None, epsilon = 4, allow_undefined_s
 
     return out_mol
 
+"""
 def parameterise_molecule(mol, which_conf = -1, models = None, epsilon = 4, allow_undefined_stereo = True, **kwargs):
     """
     which_conf : when -1 write out multiple parmed structures, one for each conformer
@@ -167,3 +168,4 @@ def simulate_vacuum(structure, output_name, num_frames = 10):
     # step = 5
     simulation.reporters.append(PDBReporter(output_name, step))
     simulation.step(step * num_frames)
+"""
