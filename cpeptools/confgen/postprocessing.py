@@ -24,10 +24,13 @@ def minimise_energy_all_confs(mol, models = None, epsilon = 4, allow_undefined_s
 
     forcefield = ForceField('test_forcefields/smirnoff99Frosst.offxml')
 
-    # molecule = Molecule.from_rdkit(mol, allow_undefined_stereo = True)
-    molecule = Molecule.from_rdkit(mol, allow_undefined_stereo = allow_undefined_stereo)
+    tmp = copy.deepcopy(mol)
+    tmp.RemoveAllConformers() #XXX workround for speed beacuse seemingly openforcefield records all conformer informations, which takes a long time. but I think this is a ill-practice
+
+    molecule = Molecule.from_rdkit(tmp, allow_undefined_stereo = allow_undefined_stereo)
     molecule.partial_charges = unit.Quantity(np.array(charges), unit.elementary_charge)
     topology = Topology.from_molecules(molecule)
+    print("here")
     openmm_system = forcefield.create_openmm_system(topology, charge_from_molecules= [molecule])
 
     structure = parmed.openmm.topsystem.load_topology(topology.to_openmm(), openmm_system)
