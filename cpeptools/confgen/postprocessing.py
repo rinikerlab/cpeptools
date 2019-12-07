@@ -1,8 +1,8 @@
-
+#TODO add need off omm parmed decorator: https://stackoverflow.com/questions/739654/how-to-make-a-chain-of-function-decorators
 def minimise_energy_all_confs(mol, models = None, epsilon = 4, allow_undefined_stereo = True, **kwargs ):
-    from simtk.unit import *
-    from simtk.openmm.app import *
-    from simtk.openmm import *
+    from simtk import unit
+    from simtk.openmm import LangevinIntegrator
+    from simtk.openmm.app import Simulation, HBonds, NoCutoff
     from rdkit import Chem
     from rdkit.Geometry import Point3D
     import mlddec
@@ -26,33 +26,29 @@ def minimise_energy_all_confs(mol, models = None, epsilon = 4, allow_undefined_s
 
     # molecule = Molecule.from_rdkit(mol, allow_undefined_stereo = True)
     molecule = Molecule.from_rdkit(mol, allow_undefined_stereo = allow_undefined_stereo)
-    molecule.partial_charges = Quantity(np.array(charges), elementary_charge)
+    molecule.partial_charges = unit.Quantity(np.array(charges), unit.elementary_charge)
     topology = Topology.from_molecules(molecule)
     openmm_system = forcefield.create_openmm_system(topology, charge_from_molecules= [molecule])
-
-
-    # conf = mol.GetConformer(0)
-    # positions = Quantity(np.array([np.array(conf.GetAtomPosition(i)) for i in range(mol.GetNumAtoms())]), angstroms)
 
     structure = parmed.openmm.topsystem.load_topology(topology.to_openmm(), openmm_system)
 
 
-    system = structure.createSystem(nonbondedMethod=NoCutoff, nonbondedCutoff=1*nanometer, constraints=HBonds)
+    system = structure.createSystem(nonbondedMethod=NoCutoff, nonbondedCutoff=1*unit.nanometer, constraints=HBonds)
 
-    integrator = LangevinIntegrator(273*kelvin, 1/picosecond, 0.002*picoseconds)
+    integrator = LangevinIntegrator(273*unit.kelvin, 1/unit.picosecond, 0.002*unit.picoseconds)
     simulation = Simulation(structure.topology, system, integrator)
 
     out_mol = copy.deepcopy(mol)
     for i in tqdm.tqdm(range(out_mol.GetNumConformers())):
         conf = mol.GetConformer(i)
-        structure.coordinates =  Quantity(np.array([np.array(conf.GetAtomPosition(i)) for i in range(mol.GetNumAtoms())]), angstroms)
+        structure.coordinates =  unit.Quantity(np.array([np.array(conf.GetAtomPosition(i)) for i in range(mol.GetNumAtoms())]), unit.angstroms)
 
         simulation.context.setPositions(structure.positions)
 
         simulation.minimizeEnergy()
         simulation.step(1)
 
-        coords = simulation.context.getState(getPositions = True).getPositions(asNumpy = True).value_in_unit(angstrom)
+        coords = simulation.context.getState(getPositions = True).getPositions(asNumpy = True).value_in_unit(unit.angstrom)
         conf = out_mol.GetConformer(i)
         for j in range(out_mol.GetNumAtoms()):
             conf.SetAtomPosition(j, Point3D(*coords[j]))
