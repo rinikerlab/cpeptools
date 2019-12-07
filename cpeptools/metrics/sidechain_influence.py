@@ -2,6 +2,7 @@ import mdtraj as md
 from scipy.spatial import Delaunay
 import numpy as np
 from ..geometry import *
+from .utils import round_to_nearest
 
 def in_hull(sidechain_coords, backbone_coords ):
     """
@@ -11,22 +12,37 @@ def in_hull(sidechain_coords, backbone_coords ):
     `hull` is either a scipy.spatial.Delaunay object or the `MxK` array of the
     coordinates of `M` points in `K`dimensions for which Delaunay triangulation
     will be computed
+
+    returns Indices of simplices containing each point. Points outside the triangulation get the value -1.
     """
     hull = Delaunay(backbone_coords)
     return hull.find_simplex(sidechain_coords)
 
-def identify_interference(traj, selection = "name N or name CA or name C or name O or name H or name CN or name CB"):
+def identify_interference(traj, backbone_selection = "name N or name CA or name C or name O or name H or name CN or name CB", sidechain_selection = None):
     #TODO assumes more than one frame otherwise the shape cmd would break
+    #FIXME something can be neither backbone or sidechain
     idx2name = {i : val for i,val in enumerate(traj.topology.atoms)}
     coords = np.array(traj.xyz)
-    backbone_idx = traj.topology.select(selection)
-    sidechain_idx = traj.topology.select("not ({})".format(selection))
 
+    if type(backbone_selection) is str:
+        backbone_idx = traj.topology.select(backbone_selection)
+    elif type(backbone_selection) is list and len({type(i) for i in backbone_selection}) == 1 and type(backbone_selection[0]) is int:
+        backbone_idx = np.array(backbone_selection)
 
-    backbone_coords =  np.squeeze(coords[:,[backbone_idx], :], 1)
-    sidechain_coords =  np.squeeze(coords[:,[sidechain_idx], :], 1)
-    out = {}
-    # print(backbone_coords.shape)
+    if sidechain_selection is None: #all that are not backbone are considered sidechain
+        if type(backbone_selection) is str:
+            sidechain_idx = traj.topology.select("not ({})".format(backbone_selection))
+        elif type(backbone_selection) is list and len({type(i) for i in backbone_selection}) == 1 and type(backbone_selection[0]) is int:
+            sidechain_idx = np.array(list(set(range(len(idx2name))) - set(backbone_idx)))
+
+    elif type(sidechain_selection) is str:
+        sidechain_idx = traj.topology.select(sidechain_selection)
+    elif type(sidechain_selection) is list and len({type(i) for i in sidechain_selection}) == 1 and type(sidechain_selection[0]) is int:
+        sidechain_idx = np.array(sidechain_selection)
+
+    backbone_coords =  coords[:,backbone_idx, :]
+    sidechain_coords =  coords[:,sidechain_idx, :]
+    out = {} #frame idx as key, atom idx that are in convex hull as values
     for i in range(len(traj)):
         tmp = [idx2name[j] for j in  sidechain_idx[in_hull(sidechain_coords[i], backbone_coords[i]) > 0]]
         if len(tmp) > 0:
@@ -34,11 +50,6 @@ def identify_interference(traj, selection = "name N or name CA or name C or name
     return out
 
 #================================================
-
-def round_to_nearest(x):
-    def out(a):
-        return round(a/x)*x
-    return out
 
 def heatmap_barchart_helper(mat, counts, lab_x, lab_y, title = ""):
     import matplotlib.pyplot as plt

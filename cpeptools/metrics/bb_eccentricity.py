@@ -1,5 +1,5 @@
 import numpy as np
-from .utils import _get_largest_ring_indices
+from .utils import get_largest_ring_indices
 from ..geometry import get_convex_hull, get_pca, get_eccentricity, ellipse_angle_of_rotation, fit_ellipse, ellipse_center,center_2D_points, get_info_from_e_obj
 
 
@@ -45,7 +45,7 @@ def get_angle_helper(e_obj, xyz):
 
 
 def calculate_eccentricity(traj, smiles = None, calc_convex_hull = True, calc_angle = True):
-    indices = _get_largest_ring_indices(traj, smiles)
+    indices = get_largest_ring_indices(traj, smiles)
 
 
     # print(indices)
@@ -94,7 +94,7 @@ def show_ellipse_fitting(md_traj, smiles = None, show_ch = True, save_path = Non
     """
     traj = md_traj[0]
 
-    indices = _get_largest_ring_indices(traj, smiles)
+    indices = get_largest_ring_indices(traj, smiles)
 
     xyz = traj.xyz[0][indices, :] #only backbone indices
     # print(xyz)

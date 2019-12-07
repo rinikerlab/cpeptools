@@ -1,4 +1,4 @@
-from .utils import _get_largest_ring_indices
+from .utils import get_largest_ring_indices
 from ..mol_ops import get_largest_ring
 from ..geometry import get_convex_hull, get_pca, get_eccentricity, ellipse_angle_of_rotation, fit_ellipse, ellipse_center,center_2D_points, get_info_from_e_obj, place_points_on_ellipse
 import numpy as np
@@ -28,7 +28,7 @@ def calculate_ellipse_overlap(traj, smiles = None, metric = "Tanimoto"):
         "Percent" : norm_overlap, #looking at a few images, not so useful,
     }
 
-    indices = _get_largest_ring_indices(traj, smiles)
+    indices = get_largest_ring_indices(traj, smiles)
 
     for frame in traj:
         xyz = frame.xyz[0][indices, :] #only backbone indices

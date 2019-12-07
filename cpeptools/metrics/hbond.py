@@ -62,7 +62,7 @@ def plot_heatmap_helper(mat, lab_x, lab_y, title = "", save_to = None):
         plt.show()
 
 
-def plot_heatmap(lookup, save_to = None, **kwargs): #calculate_hbond_occurences
+def plot_heatmap(lookup, save_to = None, title = "", **kwargs): #calculate_hbond_occurences
     import copy
     donor_labels = copy.deepcopy(lookup["labels"])
     acceptor_labels = copy.deepcopy(lookup["labels"])
@@ -97,4 +97,4 @@ def plot_heatmap(lookup, save_to = None, **kwargs): #calculate_hbond_occurences
         if val.split("-")[-1] == "OG1":
             acceptor_labels[idx] = val.split("-")[0] + "-OH"
     1
-    plot_heatmap_helper(mat, donor_labels, acceptor_labels, kwargs["title"], save_to)
+    plot_heatmap_helper(mat, donor_labels, acceptor_labels, title, save_to)
