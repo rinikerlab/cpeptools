@@ -1,3 +1,4 @@
+from ..utils import get_data_filename
 #TODO add need off omm parmed decorator: https://stackoverflow.com/questions/739654/how-to-make-a-chain-of-function-decorators
 def minimise_energy_all_confs(mol, models = None, epsilon = 4, allow_undefined_stereo = True, **kwargs ):
     from simtk import unit
@@ -22,7 +23,7 @@ def minimise_energy_all_confs(mol, models = None, epsilon = 4, allow_undefined_s
     import parmed
     import numpy as np
 
-    forcefield = ForceField('test_forcefields/smirnoff99Frosst.offxml')
+    forcefield = ForceField(get_data_filename("modified_smirnoff99Frosst.offxml")) #FIXME better way of identifying file location
 
     tmp = copy.deepcopy(mol)
     tmp.RemoveAllConformers() #XXX workround for speed beacuse seemingly openforcefield records all conformer informations, which takes a long time. but I think this is a ill-practice
