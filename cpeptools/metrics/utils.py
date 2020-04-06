@@ -26,7 +26,7 @@ def get_largest_ring_indices(traj, smiles = None):
     traj[0].save(pdb_filename)
 
     if smiles is not None:
-        mol = Chem.MolFromPDBFile(pdb_filename, removeHs = True)
+        mol = Chem.MolFromPDBFile(pdb_filename, removeHs = False)
         ref = Chem.MolFromSmiles(smiles, sanitize = True)
         mol = AllChem.AssignBondOrdersFromTemplate(ref, mol)
     else:

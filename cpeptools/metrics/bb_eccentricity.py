@@ -134,7 +134,7 @@ def show_ellipse_fitting(path_str_or_rdmol_or_md_traj, smiles = None, conf_idx =
 
     Parameters
     -----------
-    path_str_or_rdmol_or_md_traj : str/Chem.Mol/mdtraj.Trajectory
+    path_str_or_rdmol_or_md_traj : str/rdkit.Chem.Mol/mdtraj.Trajectory
         Structure to depict
     smiles : str
         SMILES string of the molecule, optionall provided to allow 
