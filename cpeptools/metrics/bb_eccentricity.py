@@ -1,5 +1,7 @@
+import mdtraj as md
+from rdkit import Chem
 import numpy as np
-from .utils import get_largest_ring_indices
+from .utils import get_largest_ring_indices, get_traj_from_rdmol
 from ..geometry import get_convex_hull, get_pca, get_eccentricity, ellipse_angle_of_rotation, fit_ellipse, ellipse_center,center_2D_points, get_info_from_e_obj
 
 
@@ -45,6 +47,30 @@ def get_angle_helper(e_obj, xyz):
 
 
 def calculate_eccentricity(traj, smiles = None, calc_convex_hull = True, calc_angle = True):
+    """
+    Calculates the eccentricity values for each incoming structure. Eccentricity calculation here tries to fit an ellipse to the largest ring in a cyclic molecule. The computed eccentricity essentially indicates how squashed the ring is.
+
+    For detail see method section of https://pubs.acs.org/doi/10.1021/acs.jcim.0c00025
+
+    Parameters
+    ----------
+    traj : mdtraj.Trajectory
+        Input set of 3D structures for the same molecule
+    smiles : str
+        SMILES string of the molecule, optionall provided to allow better inference of connectivity, default to None
+    calc_convex_hull : bool
+        Whether additional calculation is done for atoms involved in the 3D convex hull of the largest ring 
+    calc_angle : bool
+        Whether the unique angle at which the structure is squashed is calculated, see doc and run code of the function `show_ellipse_fitting` for better understanding
+
+    Returns
+    ----------
+    Iterator of tuples
+        A tuple is generated per frame in the `traj` object. 
+        By default, each tuple contains the eccentricity of the largest ring, the eccentricity of the convex hull atoms of the largest ring, the angle of squash, the variance ratio triple for the three dimensions for the ring atoms. 
+        For the variance ratio, the last value of the triple indicates how much deviation a ring is from being flat, closer the value to zero the flatter the ring.
+
+    """
     indices = get_largest_ring_indices(traj, smiles)
 
 
@@ -75,24 +101,43 @@ def calculate_eccentricity(traj, smiles = None, calc_convex_hull = True, calc_an
     #     print(e)
     #     pass
 
-def show_ellipse_fitting(md_traj, smiles = None, show_ch = True, save_path = None):
+def show_ellipse_fitting(path_str_or_rdmol_or_md_traj, smiles = None, conf_idx = 0, show_ch = False, save_path = None):
     """
-        red colors  the first two points
-        the first point has an additional line linked to the center (x) cross
-        second cross indicate the center for CH ellipse
-        balck dots are convex hull points
-        grey are non convex hull point
-        dotted ellipse fitted to all points
-        solid ellipse fitted to only CH points
-    """
+    For a given input structure, depicts its idealised 2D representation of the atoms in the largest ring:
 
+    Black markers indicate ring atoms which are also in a 2D convex hull. The remaining atoms are colored gray, except for the first two ring atoms, which are colored red. The first ring atom is also connected to the center of the fitted ellipse by a solid line. The two red dots define the direction, anticlockwise/clockwise, of the ellipse. This way the unique angle, which the directed ellipse makes with the horizontal axis, can be measured.
+
+    The eccentricity, angle of squash, and the structure deviation from flatness are displayed on the diagram.
+
+    Parameters
+    -----------
+    path_str_or_rdmol_or_md_traj : str/Chem.Mol/mdtraj.Trajectory
+        Structure to depict
+    smiles : str
+        SMILES string of the molecule, optionall provided to allow better inference of connectivity, default to None
+    conf_idx : int
+        If multiple structures are loaded, select which one to depict, default to 0
+    show_ch : bool
+        Show an additional ellipse fit using only the convex hull atoms of the largest ring of the molecule. 
+    save_path : str
+        When specified, save a figure at the given path. Default to None, which displays the figure on call of the function
+    """
+    if isinstance(path_str_or_rdmol_or_md_traj, md.Trajectory):
+        md_traj = path_str_or_rdmol_or_md_traj
+    elif isinstance(path_str_or_rdmol_or_md_traj, str):
+        md_traj = md.load(path_str_or_rdmol_or_md_traj)
+    elif isinstance(path_str_or_rdmol_or_md_traj, Chem.Mol):
+        md_traj = get_traj_from_rdmol(path_str_or_rdmol_or_md_traj)
+    else:
+        raise TypeError("The input conformer is in a unrecognised format {}.".format(type(path_str_or_rdmol_or_md_traj)))
+    
 
     import matplotlib.pyplot as plt
     from ..geometry import plot_ellipse,ellipse_axis_length
     """
         only plots the first frame of md_traj
     """
-    traj = md_traj[0]
+    traj = md_traj[conf_idx]
 
     indices = get_largest_ring_indices(traj, smiles)
 
@@ -107,8 +152,6 @@ def show_ellipse_fitting(md_traj, smiles = None, show_ch = True, save_path = Non
 
     # ch_xyz[:,0], ch_xyz[:,1] = center_2D_points(ch_xyz[:,0], ch_xyz[:,1])
     ch_e_obj = fit_ellipse(ch_xyz[:,0], ch_xyz[:,1])
-
-
 
     fig,ax = plt.subplots(1,1, figsize = (10,10))
     plt.hlines(0, -1, 1)
