@@ -42,7 +42,7 @@ Published use involving `cPeptools` is documented here.
 
 In the method section of this publication, we describe the use of elliptical 2D geometry to confine the conformational space of conformer generation. Figure 2 is repreduced below, and we would like to bias sampling of the rightmost-like cyclic molecules. This requires the useage of this package.
 <div align="center">
-<img src="https://pubs.acs.org/na101/home/literatum/publisher/achs/journals/content/jcisd8/0/jcisd8.ahead-of-print/acs.jcim.0c00025/20200331/images/medium/ci0c00025_0003.gif" alt="depict_conf"></img>
+<img src="https://pubs.acs.org/na101/home/literatum/publisher/achs/journals/content/jcisd8/2020/jcisd8.2020.60.issue-4/acs.jcim.0c00025/20200421/images/medium/ci0c00025_0003.gif" alt="depict_conf"></img>
 </div>
 
 The following code snippet is the minimum code needed:
@@ -76,7 +76,7 @@ Check the documentation for [get_amide_pairwise_coulomb_interaction](https://git
 
 Another useage described in the method section is to map a 3D ring structure to a 2D represenation with calculated metrics, figure 3 of the paper is reproduced below:
 <div align="center">
-<img src="https://pubs.acs.org/na101/home/literatum/publisher/achs/journals/content/jcisd8/0/jcisd8.ahead-of-print/acs.jcim.0c00025/20200331/images/medium/ci0c00025_0016.gif" alt="depict_conf"></img>
+<img src="https://pubs.acs.org/na101/home/literatum/publisher/achs/journals/content/jcisd8/2020/jcisd8.2020.60.issue-4/acs.jcim.0c00025/20200421/images/medium/ci0c00025_0016.gif" alt="depict_conf"></img>
 </div>
 
 The following code depicts a 3D conformer (left) as a 2D representation (right) with calculated metrics:
