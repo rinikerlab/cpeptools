@@ -48,7 +48,7 @@ def bound_matrix_from_ellipse(mol, angle, eccentricity = 0.99, bond_scale_factor
         The updated bound matrix, which can be subsequently fed 
         into RDKit's conformer generation workflow.
     """
-    bmat = AllChem.GetMoleculeBoundsMatrix(mol)
+    bmat = AllChem.GetMoleculeBoundsMatrix(mol, useMacrocycle14config = True)
     ring_indices = get_largest_ring(mol)
 
     bond_length_list = get_ring_bond_length_list(bmat, ring_indices, scale_factor = bond_scale_factor)
